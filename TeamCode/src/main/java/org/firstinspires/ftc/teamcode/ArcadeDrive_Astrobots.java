@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="HDrive_AstroBots", group="Iterative Opmode")
 //@Disabled
-public class ArcadeDrive_Astrobots extends OpMode
+public class HDrive_Astrobots extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
