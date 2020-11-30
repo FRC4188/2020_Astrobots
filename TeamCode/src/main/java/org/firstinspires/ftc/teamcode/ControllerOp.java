@@ -13,12 +13,22 @@ public class ControllerOp extends OpMode {
 
     private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor;
     private CRServo arm;
+	
+	// Constants
+	private final float ROTATION = 0.4;
+	private final float ARM_POWER = 0.2;
+	private final float HIGH_SHOT_POWER = 1.0;
+	private final float MEDIUM_SHOT_POWER = 0.4;
+	private final float POWER_SHOT_POWER = 0.8;
+	private final float MAGAZINE_POWER = 1.0;
+	private final float INTAKE_POWER = 1.0;
 
     private long lastTime = 0;
     private int lastPosition = 0;
 
     @Override
     public void init() {
+		// Initialize hardware
         frMotor = hardwareMap.get(DcMotor.class, "frMotor");
         flMotor = hardwareMap.get(DcMotor.class, "flMotor");
         brMotor = hardwareMap.get(DcMotor.class, "brMotor");
@@ -27,6 +37,7 @@ public class ControllerOp extends OpMode {
         magazineMotor = hardwareMap.get(DcMotor.class, "magazineMotor");
         shooterMotor = hardwareMap.get(DcMotor.class, "shooterMotor");
 
+		// Set motors to brake when they have no power
         frMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         brMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -69,7 +80,9 @@ public class ControllerOp extends OpMode {
         boolean powerShot = gamepad2.a;
         boolean mediumShot = gamepad2.x;
         boolean highShot = gamepad2.b;
-        /*
+       
+
+	   /*
         // calc vel
         long lastTime = this.lastTime;
         int lastPosition = this.lastPosition;
@@ -87,25 +100,24 @@ public class ControllerOp extends OpMode {
         telemetry.update();
         */
 
-        //servo arm
+        // servo arm
         if (armLeft && !armRight) {
-            arm.setPower(0.2);
+            arm.setPower(ARM_POWER);
         } else if (armRight && !armLeft) {
-            arm.setPower(-0.2);
+            arm.setPower(-ARM_POWER);
         } else {
             arm.setPower(0);
         }
-        //shooter
-
-
+		
+        // shooter logic
         if (highShot && !mediumShot && !powerShot) {
-            shooterMotor.setPower(1.0);
+            shooterMotor.setPower(HIGH_SHOT_POWER);
         }
         else if (!highShot && mediumShot && !powerShot) {
-            shooterMotor.setPower (0.4);
+            shooterMotor.setPower (MEDIUM_SHOT_POWER);
         }
         else if (!highShot && !mediumShot && powerShot){
-            shooterMotor.setPower (0.8);
+            shooterMotor.setPower (POWER_SHOT_POWER);
         }
         else {
             shooterMotor.setPower (0.0);
@@ -113,14 +125,14 @@ public class ControllerOp extends OpMode {
 
 
 
-        //magazine
+        // magazine logic
         double magazinePower;
 
         if (magazineUp > 0.2 && magazineDown == 0) {
-            magazinePower = 1.0;
+            magazinePower = MAGAZINE_POWER;
         }
         else if (magazineUp == 0.0 && magazineDown > 0.2){
-            magazinePower = -1.0;
+            magazinePower = -MAGAZINE_POWER;
         }
         else {
             magazinePower = 0.0;
@@ -130,11 +142,11 @@ public class ControllerOp extends OpMode {
 
 
 
-        //intake
+        // intake controls
         if (isIntakePress) {
-            intakeMotor.setPower(-1.0);
+            intakeMotor.setPower(-INTAKE_POWER);
         } else if (isOuttakePress) {
-            intakeMotor.setPower(1.0);
+            intakeMotor.setPower(INTAKE_POWER);
         } else {
             intakeMotor.setPower(0);
         }
@@ -144,16 +156,19 @@ public class ControllerOp extends OpMode {
         drivetrain(forwardController, strafeController, rotationController);
     }
 
+	// Convert drive vector to motor output
     private void drivetrain(double forward, double strafe, double rotation) {
         double frPower = forward - strafe - rotation;
         double flPower = forward + strafe + rotation;
         double brPower = forward + strafe - rotation;
         double blPower = forward - strafe + rotation;
 
+		// Find the power with the greatest absolute value
         double maxPower = Math.max(Math.abs(frPower), Math.abs(flPower));
         maxPower = Math.max(maxPower, Math.abs(brPower));
         maxPower = Math.max(maxPower, Math.abs(blPower));
 
+		// Divide all power by the greatest absolute value to maintain proportionality while not exceeding +/- 1
         frMotor.setPower(frPower / maxPower);
         flMotor.setPower(flPower / maxPower);
         brMotor.setPower(brPower / maxPower);
