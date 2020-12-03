@@ -102,10 +102,10 @@ public class ControllerOp extends OpMode {
             shooterMotor.setPower(1.0);
         }
         else if (!highShot && mediumShot && !powerShot) {
-            shooterMotor.setPower (0.4);
+            shooterMotor.setPower (0.5);
         }
         else if (!highShot && !mediumShot && powerShot){
-            shooterMotor.setPower (0.8);
+            shooterMotor.setPower (0.7);
         }
         else {
             shooterMotor.setPower (0.0);
