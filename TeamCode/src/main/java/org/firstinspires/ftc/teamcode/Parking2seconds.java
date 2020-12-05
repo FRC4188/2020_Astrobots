@@ -25,36 +25,25 @@ public class Parking2seconds extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+
+
         while(opModeIsActive()) {
-            if (runtime.seconds() < 3) {
-                arm.setPower(0.3);
+            double time = runtime.seconds();
+
+            if (time > 1 && time < 4){
+                drivetrain(0.8,0,0.05);
             }
-            if (runtime.seconds() > 3 && runtime.seconds() < 7) {
-                arm.setPower(0.3);
-                drivetrain(1, 0, 0);
+            if (time > 4 && time < 5){
+                drivetrain(0,0,-0.24);
             }
-            if (runtime.seconds() > 8 && runtime.seconds() < 9) {
-                arm.setPower(0.3);
-                drivetrain(0, -1, 0);
+            if (time > 5 && time < 6.2){
+                drivetrain(0.7,0,0);
             }
-            if (runtime.seconds() > 9 && runtime.seconds() < 12) {
-                arm.setPower(-0.3);
+            if (time > 6.2 && time < 6.8){
+                drivetrain(-0.6,0,0);
             }
-            if (runtime.seconds() > 12 && runtime.seconds() < 14) {
-                drivetrain(-1, 1, 0);
-            }
-            if (runtime.seconds() > 14 && runtime.seconds() < 19.5) {
-                shooterMotor.setPower(0.5);
-            }
-            if (runtime.seconds() > 19.5 && runtime.seconds() < 25.5) {
-                shooterMotor.setPower(0.5);
-                magazineMotor.setPower(1.0);
-            }
-            if (runtime.seconds() > 25.5 && runtime.seconds() < 26.5) {
-                drivetrain(1.0, 0, 0);
-            }
-            if (runtime.seconds() > 26.5) {
-                drivetrain(0, 0, 0);
+            if (time > 6.8){
+                drivetrain(0,0,0);
             }
         }
     }
@@ -81,10 +70,10 @@ public class Parking2seconds extends LinearOpMode {
     }
 
     private void drivetrain(double forward, double strafe, double rotation) {
-        frMotor.setPower(forward*1.05 - strafe - rotation);
-        flMotor.setPower(forward/1.67 + strafe + rotation);
-        brMotor.setPower(forward*1.05 + strafe - rotation);
-        blMotor.setPower(forward/1.67 - strafe + rotation);
+        frMotor.setPower(forward - strafe - rotation);
+        flMotor.setPower(forward + strafe + rotation);
+        brMotor.setPower(forward + strafe - rotation);
+        blMotor.setPower(forward - strafe + rotation);
     }
 
 }

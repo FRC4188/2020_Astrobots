@@ -11,20 +11,19 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name = "lol")
 public class ControllerOp extends OpMode {
 
-    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor;
-    private CRServo arm;
+    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor, liftMotor;
+    private CRServo horizontalArm;
 	
 	// Constants
-	private final float ROTATION = 0.4;
-	private final float ARM_POWER = 0.2;
-	private final float HIGH_SHOT_POWER = 1.0;
-	private final float MEDIUM_SHOT_POWER = 0.4;
-	private final float POWER_SHOT_POWER = 0.8;
-	private final float MAGAZINE_POWER = 1.0;
-	private final float INTAKE_POWER = 1.0;
+	private final float ROTATION = 0.4f;
+	private final float ARM_POWER = 0.2f;
+	private final float HIGH_SHOT_POWER = 1.0f;
+	private final float MEDIUM_SHOT_POWER = 0.4f;
+	private final float POWER_SHOT_POWER = 0.5f;
+	private final float MAGAZINE_POWER = 1.0f;
+	private final float INTAKE_POWER = 1.0f;
 
-    private long lastTime = 0;
-    private int lastPosition = 0;
+    private float currentShooterPower = 0.0f;
 
     @Override
     public void init() {
@@ -37,6 +36,9 @@ public class ControllerOp extends OpMode {
         magazineMotor = hardwareMap.get(DcMotor.class, "magazineMotor");
         shooterMotor = hardwareMap.get(DcMotor.class, "shooterMotor");
 
+        liftMotor = hardwareMap.get(DcMotor.class, "vArm");
+        horizontalArm = hardwareMap.get(CRServo.class, "hArm");
+
 		// Set motors to brake when they have no power
         frMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         flMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -45,12 +47,10 @@ public class ControllerOp extends OpMode {
 
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        arm = hardwareMap.get(CRServo.class, "wobbleArm");
-
-        frMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        brMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        flMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        blMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        frMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        brMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        flMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        blMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         magazineMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -68,8 +68,11 @@ public class ControllerOp extends OpMode {
         double strafeController = gamepad1.left_stick_x;
         double rotationController = gamepad1.right_stick_x;
 
-        boolean armLeft = gamepad1.left_bumper;
-        boolean armRight = gamepad1.right_bumper;
+        boolean armUp = gamepad1.right_bumper;
+        float armDown = gamepad1.right_trigger;
+
+        boolean armClose = gamepad1.left_bumper;
+        float armOpen = gamepad1.left_trigger;
 
         //Driver 2
         boolean isIntakePress = gamepad2.left_bumper;
@@ -100,24 +103,37 @@ public class ControllerOp extends OpMode {
         telemetry.update();
         */
 
-        // servo arm
-        if (armLeft && !armRight) {
-            arm.setPower(ARM_POWER);
-        } else if (armRight && !armLeft) {
-            arm.setPower(-ARM_POWER);
+        if (armUp && armDown == 0) {
+            liftMotor.setPower(0.3);
+        } else if (armDown > 0 && !armUp) {
+            liftMotor.setPower(-0.3);
         } else {
-            arm.setPower(0);
+            liftMotor.setPower(0);
+        }
+
+        if (armClose && armOpen == 0) {
+            horizontalArm.setPower(0.3);
+        } else if (armOpen > 0 && !armClose) {
+            horizontalArm.setPower(-0.3);
+        } else {
+            horizontalArm.setPower(0);
         }
 		
         // shooter logic
         if (highShot && !mediumShot && !powerShot) {
-            shooterMotor.setPower(HIGH_SHOT_POWER);
+            if (currentShooterPower == HIGH_SHOT_POWER)
+                currentShooterPower = 0f;
+            else currentShooterPower = HIGH_SHOT_POWER;
         }
         else if (!highShot && mediumShot && !powerShot) {
-            shooterMotor.setPower (MEDIUM_SHOT_POWER);
+            if (currentShooterPower == MEDIUM_SHOT_POWER)
+                currentShooterPower = 0f;
+            else currentShooterPower = MEDIUM_SHOT_POWER;
         }
         else if (!highShot && !mediumShot && powerShot){
-            shooterMotor.setPower (POWER_SHOT_POWER);
+            if (currentShooterPower == POWER_SHOT_POWER)
+                currentShooterPower = 0f;
+            else currentShooterPower = POWER_SHOT_POWER;
         }
         else {
             shooterMotor.setPower (0.0);
