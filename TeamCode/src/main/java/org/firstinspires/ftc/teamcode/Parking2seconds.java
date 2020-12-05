@@ -16,7 +16,6 @@ public class Parking2seconds extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor;
-    private CRServo arm;
 
     @Override
     public void runOpMode() {
@@ -31,7 +30,7 @@ public class Parking2seconds extends LinearOpMode {
             double time = runtime.seconds();
 
             if (time > 1 && time < 4){
-                drivetrain(0.8,0,0.05);
+                drivetrain(0.7,0,0.05);
             }
             if (time > 4 && time < 5){
                 drivetrain(0,0,-0.24);
@@ -56,7 +55,6 @@ public class Parking2seconds extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
         magazineMotor = hardwareMap.get(DcMotor.class, "magazineMotor");
         shooterMotor = hardwareMap.get(DcMotor.class, "shooterMotor");
-        arm = hardwareMap.get(CRServo.class, "wobbleArm");
 
         frMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         brMotor.setDirection(DcMotorSimple.Direction.REVERSE);

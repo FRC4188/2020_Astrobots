@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "Parking3seconds", group="Linear Opmode")
+@Autonomous(name = "Parking3testing", group="Linear Opmode")
 
-public class Parking3seconds extends LinearOpMode {
+public class Parking3testing extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -27,12 +27,41 @@ public class Parking3seconds extends LinearOpMode {
         while(opModeIsActive()) {
             double time = runtime.seconds();
             if (time > 1 && time < 6){
-                drivetrain(0.73,0, 0.06);
+                drivetrain(0.75,0, 0.057);
             }
-            if (time > 6 && time < 7.3){
-                drivetrain(-0.8,0,0);
+            if (time > 6 && time < 9){
+                drivetrain(-1.0,0,0);
             }
-            if (time > 7.3){
+            if (time > 9 && time < 9.7){
+                drivetrain(0,0,-0.05);
+            }
+            if (time > 9.7 && time < 15){
+                shooterMotor.setPower(1.0);
+                drivetrain(0,0,0);
+            }
+            if (time > 15 && time < 16.5){
+                magazineMotor.setPower(1.0);
+            }
+            if (time > 16.5 && time < 18){
+                magazineMotor.setPower(0.0);
+            }
+            if (time > 18 && time < 19.5){
+                magazineMotor.setPower(1.0);
+            }
+            if (time > 19.5 && time < 21){
+                magazineMotor.setPower(0.0);
+                intakeMotor.setPower(-1.0);
+            }
+            if (time > 21 && time < 24){
+                magazineMotor.setPower(1.0);
+            }
+            if (time > 24 && time < 25){
+                intakeMotor.setPower(0.0);
+                magazineMotor.setPower(0.0);
+                shooterMotor.setPower(0.0);
+                drivetrain(0.5,0,0);
+            }
+            if (time > 25){
                 drivetrain(0,0,0);
             }
         }

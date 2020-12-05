@@ -11,14 +11,14 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name = "lol")
 public class ControllerOp extends OpMode {
 
-    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor, liftMotor;
-    private CRServo horizontalArm;
+    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor;//, liftMotor;
+   // private CRServo horizontalArm;
 	
 	// Constants
 	private final float ROTATION = 0.4f;
 	private final float ARM_POWER = 0.2f;
 	private final float HIGH_SHOT_POWER = 1.0f;
-	private final float MEDIUM_SHOT_POWER = 0.4f;
+	private final float MEDIUM_SHOT_POWER = 0.43f;
 	private final float POWER_SHOT_POWER = 0.5f;
 	private final float MAGAZINE_POWER = 1.0f;
 	private final float INTAKE_POWER = 1.0f;
@@ -36,8 +36,9 @@ public class ControllerOp extends OpMode {
         magazineMotor = hardwareMap.get(DcMotor.class, "magazineMotor");
         shooterMotor = hardwareMap.get(DcMotor.class, "shooterMotor");
 
-        liftMotor = hardwareMap.get(DcMotor.class, "vArm");
+       /* liftMotor = hardwareMap.get(DcMotor.class, "vArm");
         horizontalArm = hardwareMap.get(CRServo.class, "hArm");
+        horizontalArm.setDirection(DcMotorSimple.Direction.REVERSE);*/
 
 		// Set motors to brake when they have no power
         frMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -47,17 +48,15 @@ public class ControllerOp extends OpMode {
 
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        brMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        flMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        blMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        frMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        brMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        flMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        blMotor.setDirection(DcMotorSimple.Direction.FORWARD);
 
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         magazineMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        shooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        shooterMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //runtime.reset();
     }
 
@@ -103,7 +102,7 @@ public class ControllerOp extends OpMode {
         telemetry.update();
         */
 
-        if (armUp && armDown == 0) {
+       /* if (armUp && armDown == 0) {
             liftMotor.setPower(0.3);
         } else if (armDown > 0 && !armUp) {
             liftMotor.setPower(-0.3);
@@ -117,28 +116,20 @@ public class ControllerOp extends OpMode {
             horizontalArm.setPower(-0.3);
         } else {
             horizontalArm.setPower(0);
-        }
+        }*/
 		
         // shooter logic
         if (highShot && !mediumShot && !powerShot) {
-            if (currentShooterPower == HIGH_SHOT_POWER)
-                currentShooterPower = 0f;
-            else currentShooterPower = HIGH_SHOT_POWER;
+            shooterMotor.setPower(HIGH_SHOT_POWER);
         }
         else if (!highShot && mediumShot && !powerShot) {
-            if (currentShooterPower == MEDIUM_SHOT_POWER)
-                currentShooterPower = 0f;
-            else currentShooterPower = MEDIUM_SHOT_POWER;
+            shooterMotor.setPower(MEDIUM_SHOT_POWER);
         }
         else if (!highShot && !mediumShot && powerShot){
-            if (currentShooterPower == POWER_SHOT_POWER)
-                currentShooterPower = 0f;
-            else currentShooterPower = POWER_SHOT_POWER;
+            shooterMotor.setPower(POWER_SHOT_POWER);
+        } else {
+            shooterMotor.setPower(0.0);
         }
-        else {
-            shooterMotor.setPower (0.0);
-        }
-
 
 
         // magazine logic
