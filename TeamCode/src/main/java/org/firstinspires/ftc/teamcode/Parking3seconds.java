@@ -27,7 +27,7 @@ public class Parking3seconds extends LinearOpMode {
         while(opModeIsActive()) {
             double time = runtime.seconds();
             if (time > 1 && time < 6){
-                drivetrain(0.73,0, 0.06);
+                drivetrain(0.73,0, 0.04);
             }
             if (time > 6 && time < 7.3){
                 drivetrain(-0.8,0,0);

@@ -30,10 +30,10 @@ public class Parking2seconds extends LinearOpMode {
             double time = runtime.seconds();
 
             if (time > 1 && time < 4){
-                drivetrain(0.7,0,0.05);
+                drivetrain(0.7,0,0.02);
             }
             if (time > 4 && time < 5){
-                drivetrain(0,0,-0.24);
+                drivetrain(0,0,-0.28);
             }
             if (time > 5 && time < 6.2){
                 drivetrain(0.7,0,0);

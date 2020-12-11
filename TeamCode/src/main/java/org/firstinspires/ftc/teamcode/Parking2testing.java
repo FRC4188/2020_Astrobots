@@ -30,22 +30,20 @@ public class Parking2testing extends LinearOpMode {
             double time = runtime.seconds();
 
             if (time > 1 && time < 4){
-                drivetrain(0.8,0,0.05);
+                drivetrain(0.7,0,0.02);
             }
             if (time > 4 && time < 5){
-                drivetrain(0,0,-0.24);
+                drivetrain(0,0,-0.28);
             }
             if (time > 5 && time < 6.2){
                 drivetrain(0.7,0,0);
             }
-            if (time > 6.2 && time < 6.8){
-                drivetrain(-0.7,0,0);
+            if (time > 6.2 && time < 8){
+                drivetrain(-0.37,0,0.14);
             }
-            if (time > 6.8 && time < 8){
-                drivetrain(0,0,0.1);
-            }
+
             if (time > 8 && time < 14){
-                shooterMotor.setPower(1.0);
+                shooterMotor.setPower(0.65);
                 drivetrain(0,0,0);
             }
             if (time > 14 && time < 15.5){
@@ -53,12 +51,14 @@ public class Parking2testing extends LinearOpMode {
             }
             if (time > 15.5 && time < 17){
                 magazineMotor.setPower(0.0);
+                drivetrain(0,0.1, 0);
             }
             if (time > 17 && time < 18.5){
                 magazineMotor.setPower(1.0);
             }
             if (time > 18.5 && time < 20){
                 magazineMotor.setPower(0.0);
+                drivetrain(0, 0.1, 0);
                 intakeMotor.setPower(-1.0);
             }
             if (time > 20 && time < 23){
@@ -68,7 +68,7 @@ public class Parking2testing extends LinearOpMode {
                 intakeMotor.setPower(0.0);
                 magazineMotor.setPower(0.0);
                 shooterMotor.setPower(0.0);
-                drivetrain(0.5,0,0);
+                drivetrain(0.4,0,0);
             }
             if (time > 24){
                 drivetrain(0,0,0);

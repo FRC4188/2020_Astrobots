@@ -27,41 +27,41 @@ public class Parking3testing extends LinearOpMode {
         while(opModeIsActive()) {
             double time = runtime.seconds();
             if (time > 1 && time < 6){
-                drivetrain(0.75,0, 0.057);
+                drivetrain(0.8,0, 0.057);
             }
             if (time > 6 && time < 9){
-                drivetrain(-1.0,0,0);
+                drivetrain(-0.8,0,0);
             }
             if (time > 9 && time < 9.7){
-                drivetrain(0,0,-0.05);
+                drivetrain(0,0,-0.2);
             }
-            if (time > 9.7 && time < 15){
-                shooterMotor.setPower(1.0);
+            if (time > 9.7 && time < 15.5){
+                shooterMotor.setPower(0.65);
                 drivetrain(0,0,0);
             }
-            if (time > 15 && time < 16.5){
+            if (time > 15.5 && time < 17){
                 magazineMotor.setPower(1.0);
             }
-            if (time > 16.5 && time < 18){
+            if (time > 17 && time < 19.5){
                 magazineMotor.setPower(0.0);
             }
-            if (time > 18 && time < 19.5){
+            if (time > 19.5 && time < 21){
                 magazineMotor.setPower(1.0);
             }
-            if (time > 19.5 && time < 21){
+            if (time > 21 && time < 22.5){
                 magazineMotor.setPower(0.0);
                 intakeMotor.setPower(-1.0);
             }
-            if (time > 21 && time < 24){
+            if (time > 22.5 && time < 25.5){
                 magazineMotor.setPower(1.0);
             }
-            if (time > 24 && time < 25){
+            if (time > 25.5 && time < 27.5){
                 intakeMotor.setPower(0.0);
                 magazineMotor.setPower(0.0);
                 shooterMotor.setPower(0.0);
-                drivetrain(0.5,0,0);
+                drivetrain(0.7,0,0);
             }
-            if (time > 25){
+            if (time > 27.5){
                 drivetrain(0,0,0);
             }
         }
