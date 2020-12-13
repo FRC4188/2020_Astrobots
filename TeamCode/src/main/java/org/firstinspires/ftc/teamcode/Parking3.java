@@ -50,7 +50,7 @@ public class Parking3 extends LinearOpMode {
         setAllPower(0);
 
         //-------------------------------------------------------------
-        drivetrain(0,0,-0.04);
+        drivetrain(0,0,-0.03);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -73,7 +73,7 @@ public class Parking3 extends LinearOpMode {
 
 
         //-------------------------------------------------------------
-        drivetrain(0, 0,-0.08);
+        drivetrain(0, 0,-0.07);
         setAllPower(1.0);
         shooterMotor.setPower(0.8);
         while (opModeIsActive() && isRobotBusy()) {
@@ -96,14 +96,21 @@ public class Parking3 extends LinearOpMode {
             if (time > 3.5 && time < 6){
                 magazineMotor.setPower(0.0);
             }
-            if (time > 6 && time < 7){
+            if (time > 6 && time < 7.5){
                 magazineMotor.setPower(1.0);
             }
-            if (time > 7 && time < 9){
+            if (time > 7.5 && time < 9){
                 magazineMotor.setPower(0.0);
                 intakeMotor.setPower(-1.0);
             }
-            if (time > 9 && time < 12){
+            if (time > 9 && time < 10){
+                magazineMotor.setPower(1.0);
+                intakeMotor.setPower(0.0);
+            }
+            if (time > 10 && time < 11){
+                magazineMotor.setPower(0.0);
+            }
+            if (time > 11 && time < 12){
                 magazineMotor.setPower(1.0);
             }
             if (time > 12 && time < 13){
