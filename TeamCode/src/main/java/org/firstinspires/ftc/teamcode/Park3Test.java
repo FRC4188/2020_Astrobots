@@ -13,8 +13,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
 
 //2.286
-@Autonomous(name = "Parking2")
-public class Parking2 extends LinearOpMode {
+@Autonomous(name = "Park3Test")
+public class Park3Test extends LinearOpMode {
 
     private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor;
 
@@ -27,7 +27,7 @@ public class Parking2 extends LinearOpMode {
         waitForStart();
 
 
-        drivetrain(1.7, 0,0);
+        drivetrain(0, 0,0.05);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -40,7 +40,7 @@ public class Parking2 extends LinearOpMode {
 
 
         //-------------------------------------------------------------
-        drivetrain(0,0,-0.12);
+        drivetrain(2.8,0,0);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -51,7 +51,7 @@ public class Parking2 extends LinearOpMode {
 
 
         //--------------------------------------------------------------
-        drivetrain(0.4, 0,0);
+        drivetrain(-1.8, 0,0);
         setAllPower(1.0);
 
 
@@ -63,19 +63,9 @@ public class Parking2 extends LinearOpMode {
 
 
         //-------------------------------------------------------------
-        drivetrain(-0.8, 0,0);
+        drivetrain(0, 0,-0.09);
         setAllPower(1.0);
-        shooterMotor.setPower(1.0);
-        while (opModeIsActive() && isRobotBusy()) {
-            //checkMotors();
-            idle();
-        }
-        setAllPower(0.0);
-
-        //-------------------------------------------------------------
-        drivetrain(0, 0,0.03);
-        setAllPower(1.0);
-
+        shooterMotor.setPower(0.8);
         while (opModeIsActive() && isRobotBusy()) {
             //checkMotors();
             idle();
@@ -88,7 +78,7 @@ public class Parking2 extends LinearOpMode {
         while (opModeIsActive()){
             double time = runtime.seconds();
             if (time > 0 && time < 3){
-                shooterMotor.setPower(1.0);
+                shooterMotor.setPower(0.8);
             }
             if (time > 3 && time < 3.5){
                 magazineMotor.setPower(1.0);
@@ -112,7 +102,7 @@ public class Parking2 extends LinearOpMode {
                 shooterMotor.setPower(0.0);
             }
             if (time > 13 && time < 14){
-                drivetrain(0.5, 0,0);
+                drivetrain(0.8, 0,0);
                 setAllPower(1.0);
 
                 while (opModeIsActive() && isRobotBusy()) {

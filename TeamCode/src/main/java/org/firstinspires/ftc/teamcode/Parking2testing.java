@@ -33,7 +33,7 @@ public class Parking2testing extends LinearOpMode {
                 drivetrain(0.7,0,0.02);
             }
             if (time > 4 && time < 5){
-                drivetrain(0,0,-0.28);
+                drivetrain(0,0,-0.35);
             }
             if (time > 5 && time < 6.2){
                 drivetrain(0.7,0,0);

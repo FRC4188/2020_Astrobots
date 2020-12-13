@@ -23,10 +23,24 @@ public class PIDTestOp extends OpMode {
     private final float MAGAZINE_POWER = 1.0f;
     private final float INTAKE_POWER = 1.0f;
 
-    private float currentShooterPower = 0.0f;
+    private final float HIGH_SHOT_VEL = 2.0f;
+    private final float MEDIUM_SHOT_VEL = 1.5f;
+    private final float POWER_SHOT_VEL = 1.6f;
+
+    private final float kP = 0.05f;
+    private final float kI = 0.000f;
+    private final float kD = 0.00f;
+
+    private float totalError = 0;
+
+    private double currentShooterPower = 0.0;
 
     private int lastCounts = 0;
     private long lastTime = 0;
+
+    private float targetSpeed = 0;
+
+    private double lastError = 0;
 
     @Override
     public void init() {
@@ -62,6 +76,7 @@ public class PIDTestOp extends OpMode {
 
         liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        shooterMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //runtime.reset();
     }
@@ -145,15 +160,37 @@ public class PIDTestOp extends OpMode {
         // shooter logic
         if (highShot && !mediumShot && !powerShot) {
             shooterMotor.setPower(HIGH_SHOT_POWER);
+            /*if(targetSpeed != HIGH_SHOT_VEL)
+                totalError = 0;
+            targetSpeed = HIGH_SHOT_VEL;
         } else if (!highShot && mediumShot && !powerShot) {
-            shooterMotor.setPower(MEDIUM_SHOT_POWER);
+            if(targetSpeed != MEDIUM_SHOT_VEL)
+                totalError = 0;
+            targetSpeed = MEDIUM_SHOT_VEL;
+           // shooterMotor.setPower(MEDIUM_SHOT_POWER);
         } else if (!highShot && !mediumShot && powerShot) {
-            shooterMotor.setPower(POWER_SHOT_POWER);
-        } else {
+            if(targetSpeed != 0)
+                totalError = 0;
+            targetSpeed = POWER_SHOT_VEL;
+           // shooterMotor.setPower(POWER_SHOT_POWER);
+        */} else {
             shooterMotor.setPower(0.0);
+            targetSpeed = 0;
+            totalError = 0;
+            currentShooterPower = 0;
         }
 
+        if (targetSpeed != 0) {
+            double error = targetSpeed - shooterVelocity;
 
+            if(Math.abs(totalError + error) * kI < 1)
+                totalError += error;
+
+            currentShooterPower = shooterMotor.getPower() + kP * error + kI * totalError + kD * (error - lastError);
+            lastError = error;
+        }
+
+        //shooterMotor.setPower(currentShooterPower);
         // magazine logic
         double magazinePower;
 

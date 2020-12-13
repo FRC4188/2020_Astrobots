@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name = "lol")
 public class ControllerOp extends OpMode {
 
-    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor, liftMotor;
-    private CRServo horizontalArm;
+    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor;
+    private CRServo horizontalArm, liftServo;
 	
 	// Constants
 	private final float ROTATION = 0.4f;
@@ -36,7 +36,7 @@ public class ControllerOp extends OpMode {
         magazineMotor = hardwareMap.get(DcMotor.class, "magazineMotor");
         shooterMotor = hardwareMap.get(DcMotor.class, "shooterMotor");
 
-        liftMotor = hardwareMap.get(DcMotor.class, "vArm");
+        liftServo = hardwareMap.get(CRServo.class, "vArm");
         horizontalArm = hardwareMap.get(CRServo.class, "hArm");
         horizontalArm.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -57,7 +57,7 @@ public class ControllerOp extends OpMode {
         magazineMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
 
         //runtime.reset();
@@ -108,17 +108,17 @@ public class ControllerOp extends OpMode {
         */
 
         if (armUp && armDown == 0 && !powerLift) {
-            liftMotor.setPower(0.2);
+            liftServo.setPower(0.2);
         } else if (armDown > 0 && !armUp && !powerLift) {
-            liftMotor.setPower(-0.2);
+            liftServo.setPower(-0.2);
         } else if (armDown == 0 && !armUp && powerLift){
-            liftMotor.setPower(0.6);
+            liftServo.setPower(-1.0);
         }
         else {
-            liftMotor.setPower(0);
+            liftServo.setPower(0);
         }
 
-        if (armClose && armOpen == 0 && !powerLift) {
+        if (armClose && armOpen == 0) {
             horizontalArm.setPower(0.3);
         } else if (armOpen > 0 && !armClose) {
             horizontalArm.setPower(-0.3);

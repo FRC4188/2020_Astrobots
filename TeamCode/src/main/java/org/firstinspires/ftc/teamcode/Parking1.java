@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -9,48 +10,118 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Constants;
 
+//2.286
 @Autonomous(name = "Parking1")
 public class Parking1 extends LinearOpMode {
 
     private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor;
-    private CRServo arm;
+
 
     private ElapsedTime runtime = new ElapsedTime();
     @Override
     public void runOpMode() throws InterruptedException {
         initialize();
-        runtime.reset();
-        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //-Constants.TICKS_PER_METER * 1.778)
-
-
-        frMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
-        flMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
-        brMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
-        blMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
-
-        setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        //
         waitForStart();
-        runtime.reset();
-        arm.setPower(0.2);
-        wait(2000);
-        arm.setPower(0.0);
 
+
+        drivetrain(0, 0,0.12);
         setAllPower(1.0);
 
-        while(opModeIsActive() && (frMotor.isBusy() || flMotor.isBusy() || brMotor.isBusy() || blMotor.isBusy())) {
+        while (opModeIsActive() && isRobotBusy()) {
+            //checkMotors();
             idle();
         }
+        setAllPower(0.0);
 
+        resetStartTime();
+
+
+        //-------------------------------------------------------------
+        drivetrain(1.67,0,0);
+        setAllPower(1.0);
+
+
+        while (opModeIsActive() && isRobotBusy()) {
+            //checkMotors();
+            idle();
+        }
         setAllPower(0);
 
+
+
+        //--------------------------------------------------------------
+        drivetrain(-0.6, 0,0);
+        setAllPower(1.0);
         shooterMotor.setPower(0.8);
-        wait(6000);
-        magazineMotor.setPower(1.0);
-        wait(8000);
+
+        while (opModeIsActive() && isRobotBusy()) {
+            //checkMotors();
+            idle();
+        }
+        setAllPower(0.0);
+
+
+        //-------------------------------------------------------------
+        drivetrain(0, 0,-0.06);
+        setAllPower(1.0);
+
+        while (opModeIsActive() && isRobotBusy()) {
+            //checkMotors();
+            idle();
+        }
+        setAllPower(0.0);
+
+
+
+        runtime.reset();
+
+        while (opModeIsActive()){
+            double time = runtime.seconds();
+            if (time > 0 && time < 3){
+                shooterMotor.setPower(0.8);
+            }
+            if (time > 3 && time < 3.5){
+                magazineMotor.setPower(1.0);
+            }
+            if (time > 3.5 && time < 6){
+                magazineMotor.setPower(0.0);
+            }
+            if (time > 6 && time < 7.5){
+                magazineMotor.setPower(1.0);
+            }
+            if (time > 7.5 && time < 9){
+                magazineMotor.setPower(0.0);
+                intakeMotor.setPower(-1.0);
+            }
+            if (time > 9 && time < 10){
+                magazineMotor.setPower(1.0);
+                intakeMotor.setPower(0.0);
+            }
+            if (time > 10 && time < 11){
+                magazineMotor.setPower(0.0);
+            }
+            if (time > 11 && time < 12){
+                magazineMotor.setPower(1.0);
+            }
+            if (time > 12 && time < 13){
+                intakeMotor.setPower(0.0);
+                magazineMotor.setPower(0.0);
+                shooterMotor.setPower(0.0);
+            }
+            if (time > 13 && time < 13.5){
+                drivetrain(0.5, 0,0);
+                setAllPower(1.0);
+
+                while (opModeIsActive() && isRobotBusy()) {
+                    //checkMotors();
+                    idle();
+                }
+                setAllPower(0.0);
+            }
+        }
 
 
 
@@ -65,7 +136,7 @@ public class Parking1 extends LinearOpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
         magazineMotor = hardwareMap.get(DcMotor.class, "magazineMotor");
         shooterMotor = hardwareMap.get(DcMotor.class, "shooterMotor");
-        arm = hardwareMap.get(CRServo.class, "wobbleArm");
+
 
         frMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         brMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -74,7 +145,9 @@ public class Parking1 extends LinearOpMode {
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         magazineMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-}
+
+
+    }
 
     private void setMotorMode(DcMotor.RunMode runMode) {
         frMotor.setMode(runMode);
@@ -85,30 +158,63 @@ public class Parking1 extends LinearOpMode {
 
     private void setAllPower(double power) {
         frMotor.setPower(power);
-        flMotor.setPower(power - 0.06);
+        flMotor.setPower(power);
         brMotor.setPower(power);
-        blMotor.setPower(power - 0.06);
+        blMotor.setPower(power);
+    }
+    private void checkMotors(){
+        if(!frMotor.isBusy()) {
+            frMotor.setPower(0);
+        }
+
+        if(!flMotor.isBusy()) {
+            flMotor.setPower(0);
+        }
+
+        if(!brMotor.isBusy()) {
+            brMotor.setPower(0);
+        }
+
+        if(!blMotor.isBusy()) {
+            blMotor.setPower(0);
+        }
     }
 
-}
-/*
-        resetStartTime();
+    private boolean isRobotBusy() {
+        return blMotor.isBusy();
+    }
 
-        while (opModeIsActive() && getRuntime() < 3) {
-            idle();
-        }
-        //
+    private void drivetrain(double forwardDistance, double strafeDistance, double rotationDistance) {
+
         setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frMotor.setTargetPosition((int) Math.round(Constants.TICKS_PER_METER * 0.205));
-        flMotor.setTargetPosition((int) Math.round(Constants.TICKS_PER_METER * 0.205));
-        brMotor.setTargetPosition((int) Math.round(Constants.TICKS_PER_METER * 0.205));
-        blMotor.setTargetPosition((int) Math.round(Constants.TICKS_PER_METER * 0.205));
+
+        frMotor.setTargetPosition(frMotor.getCurrentPosition() + (int) Math.round(Constants.TICKS_PER_METER * (forwardDistance - strafeDistance - rotationDistance)));
+        flMotor.setTargetPosition(flMotor.getCurrentPosition() + (int) Math.round(Constants.TICKS_PER_METER * (forwardDistance + strafeDistance + rotationDistance)));
+        brMotor.setTargetPosition(brMotor.getCurrentPosition() + (int) Math.round(Constants.TICKS_PER_METER * (forwardDistance + strafeDistance - rotationDistance)));
+        blMotor.setTargetPosition(blMotor.getCurrentPosition() + (int) Math.round(Constants.TICKS_PER_METER * (forwardDistance - strafeDistance + rotationDistance)));
 
         setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
-        waitForStart();
-        setAllPower(0.5);
-        while (opModeIsActive() && (frMotor.isBusy())) {
-            idle();
-        }
-        setAllPower(0);
-*/
+    }
+    private void driveSeconds(double forward, double strafe, double rotation) {
+        frMotor.setPower(forward - strafe - rotation);
+        flMotor.setPower(forward + strafe + rotation);
+        brMotor.setPower(forward + strafe - rotation);
+        blMotor.setPower(forward - strafe + rotation);
+    }
+    /*private void setLeftPower(double power, ) {
+        frMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
+        flMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
+        brMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
+        blMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
+        frMotor.setPower(-power);
+        flMotor.setPower(power);
+        brMotor.setPower();
+        blMotor.setPower(power);
+    }
+    private void setRightPower(double power) {
+        frMotor.setPower(power);
+        flMotor.setPower(0);
+        brMotor.setPower(power);
+        blMotor.setPower(0);
+    }*/
+}
