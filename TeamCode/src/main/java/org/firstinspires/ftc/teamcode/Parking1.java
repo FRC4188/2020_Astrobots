@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -16,7 +17,8 @@ import org.firstinspires.ftc.teamcode.Constants;
 @Autonomous(name = "Parking1")
 public class Parking1 extends LinearOpMode {
 
-    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor;
+    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor;
+    private DcMotorEx shooterMotor;
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -27,7 +29,7 @@ public class Parking1 extends LinearOpMode {
         waitForStart();
 
 
-        drivetrain(0, 0,0.12);
+        drivetrain(0, 0,0.10);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -55,7 +57,7 @@ public class Parking1 extends LinearOpMode {
         //--------------------------------------------------------------
         drivetrain(-0.7, 0,0);
         setAllPower(1.0);
-        shooterMotor.setPower(0.8);
+
 
         while (opModeIsActive() && isRobotBusy()) {
             //checkMotors();
@@ -65,7 +67,7 @@ public class Parking1 extends LinearOpMode {
 
 
         //-------------------------------------------------------------
-        drivetrain(0, 0,-0.065);
+        drivetrain(0, 0,-0.08);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -80,38 +82,33 @@ public class Parking1 extends LinearOpMode {
 
         while (opModeIsActive()){
             double time = runtime.seconds();
-            if (time > 0 && time < 3){
-                shooterMotor.setPower(0.8);
+            if (time > 0 && time < 4){
+                shooterMotor.setVelocity(1260);
             }
-            if (time > 3 && time < 3.5){
+            if (time > 4 && time < 5){
                 magazineMotor.setPower(1.0);
             }
-            if (time > 3.5 && time < 6){
+            if (time > 5 && time < 6){
                 magazineMotor.setPower(0.0);
             }
             if (time > 6 && time < 7.5){
                 magazineMotor.setPower(1.0);
             }
-            if (time > 7.5 && time < 9){
+            if (time > 7.5 && time < 8.5){
                 magazineMotor.setPower(0.0);
                 intakeMotor.setPower(-1.0);
             }
-            if (time > 9 && time < 10){
+            if (time > 8.5 && time < 11){
                 magazineMotor.setPower(1.0);
-                intakeMotor.setPower(0.0);
             }
-            if (time > 10 && time < 11){
-                magazineMotor.setPower(0.0);
-            }
+
+
             if (time > 11 && time < 12){
-                magazineMotor.setPower(1.0);
-            }
-            if (time > 12 && time < 13){
                 intakeMotor.setPower(0.0);
                 magazineMotor.setPower(0.0);
-                shooterMotor.setPower(0.0);
+                shooterMotor.setVelocity(0.0);
             }
-            if (time > 13){
+            if (time > 12){
                 drivetrain(0, 0,-0.06);
                 setAllPower(1.0);
                 while (opModeIsActive() && isRobotBusy()) {
@@ -144,7 +141,7 @@ public class Parking1 extends LinearOpMode {
         blMotor = hardwareMap.get(DcMotor.class, "blMotor");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
         magazineMotor = hardwareMap.get(DcMotor.class, "magazineMotor");
-        shooterMotor = hardwareMap.get(DcMotor.class, "shooterMotor");
+        shooterMotor = hardwareMap.get(DcMotorEx.class, "shooterMotor");
 
 
         frMotor.setDirection(DcMotorSimple.Direction.REVERSE);

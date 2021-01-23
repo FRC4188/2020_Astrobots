@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -15,7 +16,7 @@ public class Parking1seconds extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor;
+    private DcMotorEx frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor;
 
     @Override
     public void runOpMode() {
@@ -41,13 +42,13 @@ public class Parking1seconds extends LinearOpMode {
     }
 
     private void initialize() {
-        frMotor = hardwareMap.get(DcMotor.class, "frMotor");
-        flMotor = hardwareMap.get(DcMotor.class, "flMotor");
-        brMotor = hardwareMap.get(DcMotor.class, "brMotor");
-        blMotor = hardwareMap.get(DcMotor.class, "blMotor");
-        intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
-        magazineMotor = hardwareMap.get(DcMotor.class, "magazineMotor");
-        shooterMotor = hardwareMap.get(DcMotor.class, "shooterMotor");
+        frMotor = hardwareMap.get(DcMotorEx.class, "frMotor");
+        flMotor = hardwareMap.get(DcMotorEx.class, "flMotor");
+        brMotor = hardwareMap.get(DcMotorEx.class, "brMotor");
+        blMotor = hardwareMap.get(DcMotorEx.class, "blMotor");
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
+        magazineMotor = hardwareMap.get(DcMotorEx.class, "magazineMotor");
+        shooterMotor = hardwareMap.get(DcMotorEx.class, "shooterMotor");
 
         frMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         brMotor.setDirection(DcMotorSimple.Direction.REVERSE);

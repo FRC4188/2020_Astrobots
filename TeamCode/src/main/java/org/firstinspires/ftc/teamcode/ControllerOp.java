@@ -11,8 +11,8 @@ import com.qualcomm.robotcore.util.Range;
 @TeleOp(name = "lol")
 public class ControllerOp extends OpMode {
 
-    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor;
-    private CRServo horizontalArm, liftServo;
+    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, shooterMotor, horizontalArm;
+    private CRServo liftServo;
 	
 	// Constants
 	private final float ROTATION = 0.4f;
@@ -35,10 +35,11 @@ public class ControllerOp extends OpMode {
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
         magazineMotor = hardwareMap.get(DcMotor.class, "magazineMotor");
         shooterMotor = hardwareMap.get(DcMotor.class, "shooterMotor");
+        horizontalArm = hardwareMap.get(DcMotor.class, "hArm");
+        horizontalArm.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         liftServo = hardwareMap.get(CRServo.class, "vArm");
-        horizontalArm = hardwareMap.get(CRServo.class, "hArm");
-        horizontalArm.setDirection(DcMotorSimple.Direction.REVERSE);
 
 		// Set motors to brake when they have no power
         frMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -119,9 +120,9 @@ public class ControllerOp extends OpMode {
         }
 
         if (armClose && armOpen == 0) {
-            horizontalArm.setPower(0.3);
+            horizontalArm.setPower(1);
         } else if (armOpen > 0 && !armClose) {
-            horizontalArm.setPower(-0.3);
+            horizontalArm.setPower(-1);
         } else {
             horizontalArm.setPower(0);
         }
