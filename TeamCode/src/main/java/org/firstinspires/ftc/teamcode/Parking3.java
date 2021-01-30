@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -21,15 +22,16 @@ public class Parking3 extends LinearOpMode {
     private DcMotorEx shooterMotor;
 
 
+
     private ElapsedTime runtime = new ElapsedTime();
     @Override
     public void runOpMode() throws InterruptedException {
         initialize();
         //
         waitForStart();
+        drivetrain(0, 0,0.028);
+        shooterMotor.setPower(0.7);
 
-
-        drivetrain(0, 0,0.05);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -52,7 +54,7 @@ public class Parking3 extends LinearOpMode {
         setAllPower(0);
 
         //-------------------------------------------------------------
-        drivetrain(0,0,-0.03);
+        drivetrain(0,0,-0.02);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -75,9 +77,8 @@ public class Parking3 extends LinearOpMode {
 
 
         //-------------------------------------------------------------
-        drivetrain(0, 0,-0.07);
+        drivetrain(0, 0,-0.08);
         setAllPower(1.0);
-        shooterMotor.setPower(0.6);
         while (opModeIsActive() && isRobotBusy()) {
             //checkMotors();
             idle();
@@ -88,19 +89,24 @@ public class Parking3 extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()){
+            telemetry.addData("Velocity: ", shooterMotor.getVelocity());
+            telemetry.addData("RunMode: ", shooterMotor.getMode());
+            telemetry.update();
             double time = runtime.seconds();
-            if (time > 0 && time < 3){
-                shooterMotor.setVelocity(1400);
+            if (time > 0 && time < 5){
+                shooterMotor.setVelocity(1325);
             }
-            if (time > 3 && time < 10){
+            if (time > 5 && time < 9){
                 magazineMotor.setPower(1.0);
+                intakeMotor.setPower(-1.0);
             }
-            if (time > 10 && time < 11){
+            if (time > 9 && time < 10){
                 intakeMotor.setPower(0.0);
+                shooterMotor.setPower(0.0);
                 magazineMotor.setPower(0.0);
                 shooterMotor.setVelocity(0);
             }
-            if (time > 11 && time < 12){
+            if (time > 10 && time < 11){
                 drivetrain(0.8, 0,0);
                 setAllPower(1.0);
 
@@ -134,7 +140,6 @@ public class Parking3 extends LinearOpMode {
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         magazineMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
 
     }
 
@@ -175,7 +180,6 @@ public class Parking3 extends LinearOpMode {
 
     private void drivetrain(double forwardDistance, double strafeDistance, double rotationDistance) {
 
-        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         frMotor.setTargetPosition(frMotor.getCurrentPosition() + (int) Math.round(Constants.TICKS_PER_METER * (forwardDistance - strafeDistance - rotationDistance)));
         flMotor.setTargetPosition(flMotor.getCurrentPosition() + (int) Math.round(Constants.TICKS_PER_METER * (forwardDistance + strafeDistance + rotationDistance)));

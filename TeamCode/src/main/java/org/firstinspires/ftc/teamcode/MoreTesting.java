@@ -9,13 +9,13 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "lolshooter")
-public class ShooterTestOp extends OpMode {
+@TeleOp(name = "lolTest")
+public class MoreTesting extends OpMode {
     //declare motors
     private DcMotorEx frMotor, flMotor, brMotor, blMotor;
-    private DcMotor intakeMotor, magazineMotor, shooterMotor, verticalArm;
+    private DcMotor intakeMotor, magazineMotor, verticalArm;
     private CRServo horizontalArm;
-    private DcMotorEx shooterMotorEx;
+    private DcMotorEx shooterMotor;
 
     // Constants
     private final double ROTATION = 0.4;
@@ -36,7 +36,7 @@ public class ShooterTestOp extends OpMode {
         blMotor = hardwareMap.get(DcMotorEx.class, "blMotor");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
         magazineMotor = hardwareMap.get(DcMotor.class, "magazineMotor");
-        shooterMotor = hardwareMap.get(DcMotor.class, "shooterMotor");
+        shooterMotor = hardwareMap.get(DcMotorEx.class, "shooterMotor");
 
         horizontalArm = hardwareMap.get(CRServo.class, "hArm");
         verticalArm = hardwareMap.get(DcMotor.class, "vArm");
@@ -50,8 +50,6 @@ public class ShooterTestOp extends OpMode {
 
         shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         shooterMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        shooterMotorEx = (DcMotorEx) shooterMotor;
 
         //Declare motor directions
         frMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -111,18 +109,18 @@ public class ShooterTestOp extends OpMode {
         }
 
         //Add telemetry to show velocity
-        telemetry.addData("shooter-vel", shooterMotorEx.getVelocity());
+        telemetry.addData("shooter-vel", shooterMotor.getVelocity());
         telemetry.update();
 
         // Different
         if (highShot && !mediumShot && !powerShot) {
-            shooterMotorEx.setVelocity(HIGH_SHOT_POWER);
+            shooterMotor.setVelocity(HIGH_SHOT_POWER);
         } else if (!highShot && mediumShot && !powerShot) {
-            shooterMotorEx.setVelocity(MEDIUM_SHOT_POWER);
+            shooterMotor.setVelocity(MEDIUM_SHOT_POWER);
         } else if (!highShot && !mediumShot && powerShot) {
-            shooterMotorEx.setVelocity(POWER_SHOT_POWER);
+            shooterMotor.setVelocity(POWER_SHOT_POWER);
         } else {
-            shooterMotorEx.setVelocity(0.0);
+            shooterMotor.setVelocity(0.0);
         }
 
 

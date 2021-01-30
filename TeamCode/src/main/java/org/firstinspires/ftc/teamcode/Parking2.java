@@ -42,7 +42,7 @@ public class Parking2 extends LinearOpMode {
 
 
         //-------------------------------------------------------------
-        drivetrain(0,0,-0.12);
+        drivetrain(0,0,-0.15);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -55,7 +55,6 @@ public class Parking2 extends LinearOpMode {
         //--------------------------------------------------------------
         drivetrain(0.4, 0,0);
         setAllPower(1.0);
-        shooterMotor.setPower(0.6);
 
         while (opModeIsActive() && isRobotBusy()) {
             //checkMotors();
@@ -75,6 +74,17 @@ public class Parking2 extends LinearOpMode {
         setAllPower(0.0);
 
         //-------------------------------------------------------------
+        drivetrain(0, 0,0.02);
+        setAllPower(1.0);
+
+        while (opModeIsActive() && isRobotBusy()) {
+            //checkMotors();
+            idle();
+        }
+        setAllPower(0.0);
+
+
+        //-------------------------------------------------------------
         drivetrain(0, 0,0);
         setAllPower(1.0);
 
@@ -89,18 +99,19 @@ public class Parking2 extends LinearOpMode {
 
         while (opModeIsActive()){
             double time = runtime.seconds();
-            if (time > 0 && time < 3){
-                shooterMotor.setVelocity(1400);
+            if (time > 0 && time < 10){
+                shooterMotor.setVelocity(1325);
             }
-            if (time > 3 && time < 10){
+            if (time > 10 && time < 14){
                 magazineMotor.setPower(1.0);
+                intakeMotor.setPower(-1.0);
             }
-            if (time > 10 && time < 11){
+            if (time > 14 && time < 15){
                 intakeMotor.setPower(0.0);
                 magazineMotor.setPower(0.0);
                 shooterMotor.setVelocity(0.0);
             }
-            if (time > 11){
+            if (time > 15){
                 drivetrain(0.6, 0,0);
                 setAllPower(1.0);
 
