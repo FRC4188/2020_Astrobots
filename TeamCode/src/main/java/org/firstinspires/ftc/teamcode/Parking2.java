@@ -42,7 +42,7 @@ public class Parking2 extends LinearOpMode {
 
 
         //-------------------------------------------------------------
-        drivetrain(0,0,-0.15);
+        drivetrain(0,0,-0.18);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -53,7 +53,7 @@ public class Parking2 extends LinearOpMode {
 
 
         //--------------------------------------------------------------
-        drivetrain(0.4, 0,0);
+        drivetrain(0.5, 0,0);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -64,7 +64,7 @@ public class Parking2 extends LinearOpMode {
 
 
         //-------------------------------------------------------------
-        drivetrain(-1.0, 0,0);
+        drivetrain(-1.1, 0,0);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -74,7 +74,7 @@ public class Parking2 extends LinearOpMode {
         setAllPower(0.0);
 
         //-------------------------------------------------------------
-        drivetrain(0, 0,0.02);
+        drivetrain(0, 0,0.04);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -99,19 +99,19 @@ public class Parking2 extends LinearOpMode {
 
         while (opModeIsActive()){
             double time = runtime.seconds();
-            if (time > 0 && time < 10){
-                shooterMotor.setVelocity(1325);
+            if (time > 0 && time < 8){
+                shooterMotor.setVelocity(1190);
             }
-            if (time > 10 && time < 14){
+            if (time > 10 && time < 15){
                 magazineMotor.setPower(1.0);
                 intakeMotor.setPower(-1.0);
             }
-            if (time > 14 && time < 15){
+            if (time > 15 && time < 16){
                 intakeMotor.setPower(0.0);
                 magazineMotor.setPower(0.0);
                 shooterMotor.setVelocity(0.0);
             }
-            if (time > 15){
+            if (time > 16){
                 drivetrain(0.6, 0,0);
                 setAllPower(1.0);
 

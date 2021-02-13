@@ -30,7 +30,6 @@ public class Parking3 extends LinearOpMode {
         //
         waitForStart();
         drivetrain(0, 0,0.028);
-        shooterMotor.setPower(0.7);
 
         setAllPower(1.0);
 
@@ -93,20 +92,20 @@ public class Parking3 extends LinearOpMode {
             telemetry.addData("RunMode: ", shooterMotor.getMode());
             telemetry.update();
             double time = runtime.seconds();
-            if (time > 0 && time < 5){
-                shooterMotor.setVelocity(1325);
+            if (time > 0 && time < 10){
+                shooterMotor.setVelocity(1180);
             }
-            if (time > 5 && time < 9){
+            if (time > 10 && time < 14){
                 magazineMotor.setPower(1.0);
                 intakeMotor.setPower(-1.0);
             }
-            if (time > 9 && time < 10){
+            if (time > 14 && time < 15){
                 intakeMotor.setPower(0.0);
                 shooterMotor.setPower(0.0);
                 magazineMotor.setPower(0.0);
                 shooterMotor.setVelocity(0);
             }
-            if (time > 10 && time < 11){
+            if (time > 15 && time < 16){
                 drivetrain(0.8, 0,0);
                 setAllPower(1.0);
 

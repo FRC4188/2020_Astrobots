@@ -29,7 +29,7 @@ public class Parking1 extends LinearOpMode {
         waitForStart();
 
 
-        drivetrain(0, 0,0.10);
+        drivetrain(0, 0,0.05);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -42,7 +42,7 @@ public class Parking1 extends LinearOpMode {
 
 
         //-------------------------------------------------------------
-        drivetrain(1.67,0,0);
+        drivetrain(1.5,0,0);
         setAllPower(1.0);
 
 
@@ -67,7 +67,7 @@ public class Parking1 extends LinearOpMode {
 
 
         //-------------------------------------------------------------
-        drivetrain(0, 0,-0.08);
+        drivetrain(0, 0,-0.055);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -82,49 +82,38 @@ public class Parking1 extends LinearOpMode {
 
         while (opModeIsActive()){
             double time = runtime.seconds();
-            if (time > 0 && time < 4){
-                shooterMotor.setVelocity(1260);
+            if (time > 0 && time < 14){
+                shooterMotor.setVelocity(1190);
             }
-            if (time > 4 && time < 5){
+            if (time > 14 && time < 18){
                 magazineMotor.setPower(1.0);
-            }
-            if (time > 5 && time < 6){
-                magazineMotor.setPower(0.0);
-            }
-            if (time > 6 && time < 7.5){
-                magazineMotor.setPower(1.0);
-            }
-            if (time > 7.5 && time < 8.5){
-                magazineMotor.setPower(0.0);
                 intakeMotor.setPower(-1.0);
             }
-            if (time > 8.5 && time < 11){
-                magazineMotor.setPower(1.0);
-            }
-
-
-            if (time > 11 && time < 12){
+            if (time > 19 && time < 19){
                 intakeMotor.setPower(0.0);
+                shooterMotor.setPower(0.0);
                 magazineMotor.setPower(0.0);
-                shooterMotor.setVelocity(0.0);
+                shooterMotor.setVelocity(0);
             }
-            if (time > 12){
+            if (time > 19){
                 drivetrain(0, 0,-0.06);
                 setAllPower(1.0);
+
                 while (opModeIsActive() && isRobotBusy()) {
                     //checkMotors();
                     idle();
                 }
                 setAllPower(0.0);
-                //--------------------------------------------------------------------------
+
                 drivetrain(1.0, 0,0);
                 setAllPower(1.0);
+
                 while (opModeIsActive() && isRobotBusy()) {
                     //checkMotors();
                     idle();
                 }
                 setAllPower(0.0);
-                //--------------------------------------------------------------------------
+
                 break;
             }
         }

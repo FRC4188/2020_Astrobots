@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "lolshooter")
@@ -18,6 +19,10 @@ public class ShooterTestOp extends OpMode {
     private DcMotorEx shooterMotorEx;
 
     // Constants
+    private boolean isXPressed = false;
+    private boolean isBPressed = false;
+
+
     private final double ROTATION = 0.4;
     private final double ARM_POWER = 0.2;
     private final double HIGH_SHOT_POWER = 5000;
@@ -26,6 +31,9 @@ public class ShooterTestOp extends OpMode {
     private final double MAGAZINE_POWER = 1.0;
     private final double INTAKE_POWER = 1.0;
     private float currentShooterPower = 0.0f;
+
+    private ElapsedTime runtime = new ElapsedTime();
+
 
     @Override
     public void init() {
@@ -41,6 +49,7 @@ public class ShooterTestOp extends OpMode {
         horizontalArm = hardwareMap.get(CRServo.class, "hArm");
         verticalArm = hardwareMap.get(DcMotor.class, "vArm");
         verticalArm.setDirection(DcMotorSimple.Direction.REVERSE);
+        verticalArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set motors to brake when they have no power
         frMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -74,11 +83,11 @@ public class ShooterTestOp extends OpMode {
         double strafeController = gamepad1.left_stick_x;
         double rotationController = gamepad1.right_stick_x;
 
-        boolean armUp = gamepad1.right_bumper;
-        boolean armDown = gamepad1.left_bumper;
+        boolean armUp = gamepad1.left_bumper;
+        float armDown = gamepad1.left_trigger;
 
         float armClose = gamepad1.right_trigger;
-        float armOpen = gamepad1.left_trigger;
+        boolean armOpen = gamepad1.right_bumper;
 
         //Driver 2
         boolean isIntakePress = gamepad2.left_bumper;
@@ -93,23 +102,29 @@ public class ShooterTestOp extends OpMode {
 
         //Arm Code
 
-        if (armUp && !armDown) {
-            verticalArm.setPower(0.2);
-        } else if (armDown && !armUp) {
-            verticalArm.setPower(-0.5);
+        if (armUp && armDown == 0) {
+            verticalArm.setPower(0.7);
+        } else if (armDown > 0 && !armUp) {
+            verticalArm.setPower(-0.4);
         }
         else {
             verticalArm.setPower(0);
         }
 
-        if (armClose > 0&& armOpen == 0) {
+        if (armClose > 0&& !armOpen) {
             horizontalArm.setPower(1);
-        } else if (armOpen > 0 && armClose == 0) {
+        } else if (armOpen && armClose == 0) {
             horizontalArm.setPower(-1);
         } else {
             horizontalArm.setPower(0);
         }
 
+        if (gamepad1.dpad_up && !gamepad1.dpad_down) {
+            verticalArm.setPower(0.25);
+        }
+        if (!gamepad1.dpad_up && gamepad1.dpad_down) {
+            verticalArm.setPower(-0.1);
+        }
         //Add telemetry to show velocity
         telemetry.addData("shooter-vel", shooterMotorEx.getVelocity());
         telemetry.update();
@@ -157,6 +172,40 @@ public class ShooterTestOp extends OpMode {
         else if(!gamepad1.dpad_left && gamepad1.dpad_right)
             drivetrainSlow(0, -1, -0.03);
 
+        //Power shot adjusments
+
+        if (gamepad1.x && isXPressed == false){
+            runtime.reset();
+            if (runtime.seconds() > 0 && runtime.seconds() < 3){
+                drivetrain(0, 1, 0);
+            }
+            if (runtime.seconds() > 3){
+                drivetrain(0,0,0);
+                isXPressed = true;
+            }
+
+        }
+        if (!gamepad1.x){
+            isXPressed = false;
+        }
+
+        /*
+        if (gamepad1.b && isBPressed == false){
+            runtime.reset();
+            if (runtime.seconds() > 0 && runtime.seconds() < 3){
+                drivetrain(0, -1, 0);
+            }
+            drivetrain(0,0,0);
+            isBPressed = true;
+        }
+        if (!gamepad1.b){
+            isBPressed = false;
+        }
+
+         */
+
+
+
 
     }
 
@@ -191,11 +240,12 @@ public class ShooterTestOp extends OpMode {
         //      maxPower = Math.max(maxPower, Math.abs(blPower));
 
         // Divide all power by the greatest absolute value to maintain proportionality while not exceeding +/- 1
-        frMotor.setVelocity(frPower * 500);
-        flMotor.setVelocity(flPower * 500);
-        brMotor.setVelocity(brPower * 500);
-        blMotor.setVelocity(blPower * 500);
+        frMotor.setVelocity(frPower *500);
+        flMotor.setVelocity(flPower *500);
+        brMotor.setVelocity(brPower *500);
+        blMotor.setVelocity(blPower *500);
     }
+
 
 
 }
