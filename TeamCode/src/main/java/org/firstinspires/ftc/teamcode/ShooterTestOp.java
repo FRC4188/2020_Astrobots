@@ -182,11 +182,12 @@ public class ShooterTestOp extends OpMode {
             if (runtime.seconds() > 3){
                 drivetrain(0,0,0);
                 isXPressed = true;
+                if (!gamepad1.x){
+                    isXPressed = false;
+                }
             }
 
-        }
-        if (!gamepad1.x){
-            isXPressed = false;
+
         }
 
         /*
