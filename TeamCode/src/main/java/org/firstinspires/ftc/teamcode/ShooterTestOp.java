@@ -126,21 +126,22 @@ public class ShooterTestOp extends OpMode {
         // If move arm down slowly is pressed and slowly up is not, slowly move the arm down
         if (!gamepad1.dpad_up && gamepad1.dpad_down) verticalArm.setPower(-0.1);
 
+        // Shooter Logic
         //Add telemetry to show velocity
         telemetry.addData("shooter-vel", shooterMotorEx.getVelocity());
         telemetry.update();
 
-        // Different
-        if (highShot && !mediumShot && !powerShot) {
-            shooterMotorEx.setVelocity(HIGH_SHOT_POWER);
-        } else if (!highShot && mediumShot && !powerShot) {
-            shooterMotorEx.setVelocity(MEDIUM_SHOT_POWER);
-        } else if (!highShot && !mediumShot && powerShot) {
-            shooterMotorEx.setVelocity(POWER_SHOT_POWER);
-        } else {
-            shooterMotorEx.setVelocity(0.0);
-        }
+        // If high shot is pressed and nothing else, set high shot velocity
+        if (highShot && !mediumShot && !powerShot) shooterMotorEx.setVelocity(HIGH_SHOT_POWER);
 
+        // If medium shot is pressed and nothing else, set medium shot velocity
+        else if (!highShot && mediumShot && !powerShot) shooterMotorEx.setVelocity(MEDIUM_SHOT_POWER);
+
+        // If low shot is pressed and nothing else, set low shot velocity
+        else if (!highShot && !mediumShot && powerShot) shooterMotorEx.setVelocity(POWER_SHOT_POWER);
+
+        // If no shooter button is pressed, idle the shooter
+        else shooterMotorEx.setVelocity(0.0);
 
         // magazine logic
         double magazinePower;
