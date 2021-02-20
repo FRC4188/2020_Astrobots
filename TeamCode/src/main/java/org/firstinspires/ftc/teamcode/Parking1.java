@@ -40,8 +40,9 @@ public class Parking1 extends LinearOpMode {
 
         resetStartTime();
 
-
         //-------------------------------------------------------------
+
+        // Robot drives forward specified distance and stops
         drivetrain(1.5,0,0);
         setAllPower(1.0);
 
@@ -179,6 +180,13 @@ public class Parking1 extends LinearOpMode {
         return blMotor.isBusy();
     }
 
+    /**
+     * Increment a value by delta and return the new value.
+     *
+     * @param  forwardDistance   the distance, in meters, the robot should move forward
+     * @param  strafeDistance    the distance, in meters, the robot should strafe sideways
+     * @param  rotationDistance  the angle to rotate the robot
+     */
     private void drivetrain(double forwardDistance, double strafeDistance, double rotationDistance) {
 
         setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -196,37 +204,5 @@ public class Parking1 extends LinearOpMode {
         brMotor.setPower(forward + strafe - rotation);
         blMotor.setPower(forward - strafe + rotation);
     }
-    /*double time = runtime.seconds();
-            if (time > 0 && time < 3){
-                shooterMotor.setPower(0.8);
-            }
-            if (time > 3 && time < 3.5){
-                magazineMotor.setPower(1.0);
-            }
-            if (time > 3.5 && time < 6){
-                magazineMotor.setPower(0.0);
-            }
-            if (time > 6 && time < 7.5){
-                magazineMotor.setPower(1.0);
-            }
-            if (time > 7.5 && time < 9){
-                magazineMotor.setPower(0.0);
-                intakeMotor.setPower(-1.0);
-            }
-            if (time > 9 && time < 10){
-                magazineMotor.setPower(1.0);
-                intakeMotor.setPower(0.0);
-            }
-            if (time > 10 && time < 11){
-                magazineMotor.setPower(0.0);
-            }
-            if (time > 11 && time < 12){
-                magazineMotor.setPower(1.0);
-            }
-            if (time > 12 && time < 13){
-                intakeMotor.setPower(0.0);
-                magazineMotor.setPower(0.0);
-                shooterMotor.setPower(0.0);
-            }
-    }*/
+
 }
