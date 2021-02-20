@@ -102,29 +102,30 @@ public class ShooterTestOp extends OpMode {
 
         //Arm Code
 
-        if (armUp && armDown == 0) {
-            verticalArm.setPower(0.7);
-        } else if (armDown > 0 && !armUp) {
-            verticalArm.setPower(-0.4);
-        }
-        else {
-            verticalArm.setPower(0);
-        }
+        // If arm up is pressed and arm down is not, move arm up
+        if (armUp && armDown == 0) verticalArm.setPower(0.7);
 
-        if (armClose > 0&& !armOpen) {
-            horizontalArm.setPower(1);
-        } else if (armOpen && armClose == 0) {
-            horizontalArm.setPower(-1);
-        } else {
-            horizontalArm.setPower(0);
-        }
+        // If arm down is pressed and arm up is not, move arm down
+        else if (armDown > 0 && !armUp) verticalArm.setPower(-0.4);
 
-        if (gamepad1.dpad_up && !gamepad1.dpad_down) {
-            verticalArm.setPower(0.25);
-        }
-        if (!gamepad1.dpad_up && gamepad1.dpad_down) {
-            verticalArm.setPower(-0.1);
-        }
+        // Neither button is pressed, idle the arm
+        else verticalArm.setPower(0);
+
+        // If arm close is pressed and arm open is not, close arm
+        if (armClose > 0 && !armOpen) horizontalArm.setPower(1);
+
+        // If arm open is pressed and arm close is not, open arm
+        else if (armOpen && armClose == 0) horizontalArm.setPower(-1);
+
+        // Neither button is pressed, idle the arm
+        else horizontalArm.setPower(0);
+
+        // If move arm up slowly is pressed and slowly down is not, slowly move the arm up
+        if (gamepad1.dpad_up && !gamepad1.dpad_down) verticalArm.setPower(0.25);
+
+        // If move arm down slowly is pressed and slowly up is not, slowly move the arm down
+        if (!gamepad1.dpad_up && gamepad1.dpad_down) verticalArm.setPower(-0.1);
+
         //Add telemetry to show velocity
         telemetry.addData("shooter-vel", shooterMotorEx.getVelocity());
         telemetry.update();
@@ -174,21 +175,6 @@ public class ShooterTestOp extends OpMode {
 
         //Power shot adjusments
 
-        if (gamepad1.x && isXPressed == false){
-            runtime.reset();
-            if (runtime.seconds() > 0 && runtime.seconds() < 3){
-                drivetrain(0, 1, 0);
-            }
-            if (runtime.seconds() > 3){
-                drivetrain(0,0,0);
-                isXPressed = true;
-                if (!gamepad1.x){
-                    isXPressed = false;
-                }
-            }
-
-
-        }
 
         /*
         if (gamepad1.b && isBPressed == false){
@@ -234,11 +220,6 @@ public class ShooterTestOp extends OpMode {
         double flPower = forward + strafe + rotation;
         double brPower = forward + strafe - rotation;
         double blPower = forward - strafe + rotation;
-
-        // Find the power with the greatest absolute value
-//        double maxPower = Math.max(Math.abs(frPower), Math.abs(flPower));
-        //       maxPower = Math.max(maxPower, Math.abs(brPower));
-        //      maxPower = Math.max(maxPower, Math.abs(blPower));
 
         // Divide all power by the greatest absolute value to maintain proportionality while not exceeding +/- 1
         frMotor.setVelocity(frPower *500);
