@@ -27,7 +27,7 @@ public class MechDriveAstrobots extends LinearOpMode {
     }
 
     private void controllerTest() {
-        double forwardController = gamepad1.left_stick_y;
+        double forwardController = -gamepad1.left_stick_y;
         double strafeController = gamepad1.left_stick_x;
         double rotationController = gamepad1.right_stick_x;
 
@@ -54,9 +54,9 @@ public class MechDriveAstrobots extends LinearOpMode {
 
     private void drivetrain(double forward, double strafe, double rotation) {
         frMotor.setPower(forward - strafe - rotation);
-        flMotor.setPower(forward + strafe + rotation);
+        flMotor.setPower(forward/1.65 + strafe + rotation);
         brMotor.setPower(forward + strafe - rotation);
-        blMotor.setPower(forward - strafe + rotation);
+        blMotor.setPower(forward/1.65 - strafe + rotation);
     }
 
 }
