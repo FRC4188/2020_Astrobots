@@ -25,7 +25,7 @@ public class ShooterTestOp extends OpMode {
 
     private final double ROTATION = 0.4;
     private final double ARM_POWER = 0.2;
-    private final double HIGH_SHOT_POWER = 5000;
+    private final double HIGH_SHOT_POWER = 1600;
     private final double MEDIUM_SHOT_POWER = 1000;
     private final double POWER_SHOT_POWER = 1200;
     private final double MAGAZINE_POWER = 1.0;

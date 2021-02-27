@@ -20,6 +20,7 @@ public class Parking extends LinearOpMode {
     private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, verticalArm;
     private DcMotorEx shooterMotor;
     private CRServo horizontalArm;
+    private DcMotorEx shooterMotorEx;
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -44,7 +45,7 @@ public class Parking extends LinearOpMode {
 
         //-------------------------------------------------------------
 
-        drivetrain(0, 0,-0.03);
+        drivetrain(0, 0,-0.038);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -63,21 +64,35 @@ public class Parking extends LinearOpMode {
 
         while (opModeIsActive()){
             double time = runtime.seconds();
-            if (time > 0 && time < 10){
-                shooterMotor.setVelocity(1300);
+            if (time > 0 && time < 13){
+                shooterMotorEx.setVelocity(10000);
+                telemetry.addData("shootervel", shooterMotorEx.getVelocity());
+                telemetry.update();
+
             }
-            if (time > 10 && time < 14){
+            if (time > 13 && time < 13.75){
                 magazineMotor.setPower(1.0);
                 intakeMotor.setPower(-1.0);
             }
-            if (time > 14 && time < 15){
+            if (time > 13.75 && time < 14.5){
+                magazineMotor.setPower(0.0);
+            }
+            if (time > 14.5 && time < 15.25){
+                magazineMotor.setPower(1.0);
+            }
+            if (time > 15.25 && time < 16){
+                magazineMotor.setPower(0.0);
+            }
+            if (time > 16 && time < 17){
+                magazineMotor.setPower(1.0);
+            }
+            if (time > 17 && time < 18){
                 intakeMotor.setPower(0.0);
-                shooterMotor.setPower(0.0);
                 magazineMotor.setPower(0.0);
                 shooterMotor.setVelocity(0);
             }
-            if (time > 15 && time < 16){
-                drivetrain(0, 0,-0.2);
+            if (time > 18 && time < 19){
+                drivetrain(0.25, 0,0);
                 setAllPower(1.0);
 
                 while (opModeIsActive() && isRobotBusy()) {
@@ -86,14 +101,26 @@ public class Parking extends LinearOpMode {
                 }
                 setAllPower(0.0);
             }
-            if (time > 16 && time < 18){
-                verticalArm.setPower(-0.5);
+
+            if (time > 19 && time < 20){
+                drivetrain(0, 0,-0.12);
+                setAllPower(1.0);
+
+                while (opModeIsActive() && isRobotBusy()) {
+                    //checkMotors();
+                    idle();
+                }
+                setAllPower(0.0);
             }
-            if (time > 18 && time < 19.5){
+
+            if (time > 20 && time < 21.75){
+                verticalArm.setPower(-0.35);
+            }
+            if (time > 21.75 && time < 22.5){
                 verticalArm.setPower(0);
                 horizontalArm.setPower(1.0);
             }
-            if (time > 19.5 && time < 20){
+            if (time > 22.5 && time < 23){
                 drivetrain(0.3, 0,0);
                 setAllPower(1.0);
 
@@ -104,8 +131,8 @@ public class Parking extends LinearOpMode {
                 setAllPower(0.0);
             }
 
-            if (time > 20 && time < 20.5){
-                drivetrain(0, 0,0.1);
+            if (time > 23 && time < 23.5){
+                drivetrain(0, 0,0.2);
                 setAllPower(1.0);
 
                 while (opModeIsActive() && isRobotBusy()) {
@@ -115,8 +142,8 @@ public class Parking extends LinearOpMode {
                 setAllPower(0.0);
             }
 
-            if (time > 20.5 && time < 21){
-                drivetrain(0, 0,0.1);
+            if (time > 23.5 && time < 24){
+                drivetrain(0, 0,0.05);
                 setAllPower(1.0);
 
                 while (opModeIsActive() && isRobotBusy()) {
@@ -128,8 +155,8 @@ public class Parking extends LinearOpMode {
                 break;
             }
 
-            if (time > 21 && time < 21.5){
-                drivetrain(0.5, 0,0);
+            if (time > 24 && time < 24.5){
+                drivetrain(-0.5, 0,0);
                 setAllPower(1.0);
 
                 while (opModeIsActive() && isRobotBusy()) {
@@ -170,6 +197,7 @@ public class Parking extends LinearOpMode {
         verticalArm.setDirection(DcMotorSimple.Direction.REVERSE);
         verticalArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        shooterMotorEx = (DcMotorEx) shooterMotor;
 
 
     }
