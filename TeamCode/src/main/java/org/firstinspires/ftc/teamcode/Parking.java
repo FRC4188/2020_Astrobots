@@ -45,7 +45,7 @@ public class Parking extends LinearOpMode {
 
         //-------------------------------------------------------------
 
-        drivetrain(0, 0,-0.038);
+        drivetrain(0, 0,-0.042);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -65,7 +65,7 @@ public class Parking extends LinearOpMode {
         while (opModeIsActive()){
             double time = runtime.seconds();
             if (time > 0 && time < 13){
-                shooterMotorEx.setVelocity(10000);
+                shooterMotorEx.setVelocity(1350);
                 telemetry.addData("shootervel", shooterMotorEx.getVelocity());
                 telemetry.update();
 

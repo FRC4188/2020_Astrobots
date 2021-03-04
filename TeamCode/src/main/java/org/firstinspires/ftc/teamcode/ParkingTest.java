@@ -14,16 +14,18 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Constants;
 
 //2.286
-@Autonomous(name = "Parking1")
-public class Parking1 extends LinearOpMode {
+@Autonomous(name = "ParkingTest")
+public class ParkingTest extends LinearOpMode {
 
-    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, verticalArm;
+    private DcMotorEx frMotor, flMotor, brMotor, blMotor;
+    private DcMotor intakeMotor, magazineMotor, verticalArm;
     private DcMotorEx shooterMotor;
     private CRServo horizontalArm;
     private DcMotorEx shooterMotorEx;
 
 
     private ElapsedTime runtime = new ElapsedTime();
+
     @Override
     public void runOpMode() throws InterruptedException {
         initialize();
@@ -32,7 +34,7 @@ public class Parking1 extends LinearOpMode {
 
         horizontalArm.setPower(-1.0);
 
-        drivetrain(1.4, 0,0);
+        drivetrain(1.4, 0, 0);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -42,119 +44,63 @@ public class Parking1 extends LinearOpMode {
         setAllPower(0.0);
 
         resetStartTime();
-
-        //-------------------------------------------------------------
-
-        drivetrain(0, 0,-0.04);
-        setAllPower(1.0);
-
-        while (opModeIsActive() && isRobotBusy()) {
-            //checkMotors();
-            idle();
-        }
-        setAllPower(0.0);
-
-        resetStartTime();
-
-        //-------------------------------------------------------------
-
-
 
         runtime.reset();
 
-        while (opModeIsActive()){
-            double time = runtime.seconds();
-            if (time > 0 && time < 9){
-                shooterMotorEx.setVelocity(1350);
-                telemetry.addData("shootervel", shooterMotorEx.getVelocity());
-                telemetry.update();
+        double shooterTime = runtime.seconds();
 
-            }
-            if (time > 9 && time < 9.75){
-                magazineMotor.setPower(1.0);
-                intakeMotor.setPower(-1.0);
-            }
-            if (time > 9.75 && time < 10.5){
-                magazineMotor.setPower(0.0);
-            }
-            if (time > 10.5 && time < 11.25){
-                magazineMotor.setPower(1.0);
-            }
-            if (time > 11.25 && time < 12){
-                magazineMotor.setPower(0.0);
-            }
-            if (time > 12 && time < 13){
-                magazineMotor.setPower(1.0);
-            }
-            if (time > 13 && time < 14){
-                intakeMotor.setPower(0.0);
-                magazineMotor.setPower(0.0);
-                shooterMotor.setVelocity(0);
-            }
-            if (time > 14 && time < 16){
-                drivetrain(0, 0,1.0);
-                setAllPower(1.0);
+        int shootingStage = 0;
+        boolean isShooting = true;
 
-                while (opModeIsActive() && isRobotBusy()) {
-                    //checkMotors();
-                    idle();
-                }
-                setAllPower(0.0);
+        double timeShot = runtime.seconds();
+
+        while (opModeIsActive()) {
+            telemetry.addData("shooter-vel", shooterMotorEx.getVelocity());
+            telemetry.update();
+
+            double timeSinceShot = runtime.seconds() - timeShot;
+
+            if (!isShooting && timeSinceShot < 0.5) {
+                drivetrainSlow(0, -1, -0.03);
+            } else {
+                drivetrainSlow(0, 0, 0);
+                isShooting = true;
             }
 
-            if (time > 15 && time < 16){
-                drivetrain(-0.5, 0,0);
-                setAllPower(1.0);
+            if (isShooting) {
+                shooterMotorEx.setVelocity(1150);
+                if (shooterMotorEx.getVelocity() > 1120) {
+                    if (runtime.seconds() - shooterTime > 2) {
+                        shooterMotorEx.setVelocity(0);
+                        magazineMotor.setPower(0);
+                        intakeMotor.setPower(0);
+                        isShooting = false;
+                        shootingStage++;
 
-                while (opModeIsActive() && isRobotBusy()) {
-                    //checkMotors();
-                    idle();
-                }
-                setAllPower(0.0);
+                        if (shootingStage > 2)
+                            break;
+
+                        timeShot = runtime.seconds();
+                        continue;
+                    }
+                    magazineMotor.setPower(1.0);
+                    intakeMotor.setPower(-1.0);
+                } else shooterTime = runtime.seconds();
+
             }
 
-            if (time > 16 && time < 17.75){
-                verticalArm.setPower(-0.35);
-            }
-            if (time > 17.75 && time < 18.5){
-                verticalArm.setPower(0);
-                horizontalArm.setPower(1.0);
-            }
-            if (time > 18.5 && time < 19.5){
-                drivetrain(0, 0,0.3);
-                setAllPower(1.0);
-
-                while (opModeIsActive() && isRobotBusy()) {
-                    //checkMotors();
-                    idle();
-                }
-                setAllPower(0.0);
-            }
-            if (time > 19.5 && time < 20.5){
-                drivetrain(.5, 0,0);
-                setAllPower(1.0);
-
-                while (opModeIsActive() && isRobotBusy()) {
-                    //checkMotors();
-                    idle();
-                }
-                setAllPower(0.0);
-
-                break;
-            }
 
         }
-
 
 
     }
 
     private void initialize() {
 
-        frMotor = hardwareMap.get(DcMotor.class, "frMotor");
-        flMotor = hardwareMap.get(DcMotor.class, "flMotor");
-        brMotor = hardwareMap.get(DcMotor.class, "brMotor");
-        blMotor = hardwareMap.get(DcMotor.class, "blMotor");
+        frMotor = hardwareMap.get(DcMotorEx.class, "frMotor");
+        flMotor = hardwareMap.get(DcMotorEx.class, "flMotor");
+        brMotor = hardwareMap.get(DcMotorEx.class, "brMotor");
+        blMotor = hardwareMap.get(DcMotorEx.class, "blMotor");
         intakeMotor = hardwareMap.get(DcMotor.class, "intakeMotor");
         magazineMotor = hardwareMap.get(DcMotor.class, "magazineMotor");
         shooterMotor = hardwareMap.get(DcMotorEx.class, "shooterMotor");
@@ -172,6 +118,8 @@ public class Parking1 extends LinearOpMode {
         verticalArm = hardwareMap.get(DcMotor.class, "vArm");
         verticalArm.setDirection(DcMotorSimple.Direction.REVERSE);
         verticalArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        shooterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         shooterMotorEx = (DcMotorEx) shooterMotor;
 
@@ -191,20 +139,21 @@ public class Parking1 extends LinearOpMode {
         brMotor.setPower(power);
         blMotor.setPower(power);
     }
-    private void checkMotors(){
-        if(!frMotor.isBusy()) {
+
+    private void checkMotors() {
+        if (!frMotor.isBusy()) {
             frMotor.setPower(0);
         }
 
-        if(!flMotor.isBusy()) {
+        if (!flMotor.isBusy()) {
             flMotor.setPower(0);
         }
 
-        if(!brMotor.isBusy()) {
+        if (!brMotor.isBusy()) {
             brMotor.setPower(0);
         }
 
-        if(!blMotor.isBusy()) {
+        if (!blMotor.isBusy()) {
             blMotor.setPower(0);
         }
     }
@@ -216,9 +165,9 @@ public class Parking1 extends LinearOpMode {
     /**
      * Increment a value by delta and return the new value.
      *
-     * @param  forwardDistance   the distance, in meters, the robot should move forward
-     * @param  strafeDistance    the distance, in meters, the robot should strafe sideways
-     * @param  rotationDistance  the angle to rotate the robot
+     * @param forwardDistance  the distance, in meters, the robot should move forward
+     * @param strafeDistance   the distance, in meters, the robot should strafe sideways
+     * @param rotationDistance the angle to rotate the robot
      */
     private void drivetrain(double forwardDistance, double strafeDistance, double rotationDistance) {
 
@@ -231,6 +180,20 @@ public class Parking1 extends LinearOpMode {
 
         setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
+    private void drivetrainSlow(double forward, double strafe, double rotation) {
+        double frPower = forward - strafe - rotation;
+        double flPower = forward + strafe + rotation;
+        double brPower = forward + strafe - rotation;
+        double blPower = forward - strafe + rotation;
+
+        // Divide all power by the greatest absolute value to maintain proportionality while not exceeding +/- 1
+        frMotor.setVelocity(frPower * 500);
+        flMotor.setVelocity(flPower * 500);
+        brMotor.setVelocity(brPower * 500);
+        blMotor.setVelocity(blPower * 500);
+    }
+
     private void driveSeconds(double forward, double strafe, double rotation) {
         frMotor.setPower(forward - strafe - rotation);
         flMotor.setPower(forward + strafe + rotation);

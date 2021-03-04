@@ -17,8 +17,10 @@ import org.firstinspires.ftc.teamcode.Constants;
 @Autonomous(name = "Parking2")
 public class Parking2 extends LinearOpMode {
 
-    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor;
+    private DcMotor frMotor, flMotor, brMotor, blMotor, intakeMotor, magazineMotor, verticalArm;
     private DcMotorEx shooterMotor;
+    private CRServo horizontalArm;
+    private DcMotorEx shooterMotorEx;
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -28,8 +30,9 @@ public class Parking2 extends LinearOpMode {
         //
         waitForStart();
 
+        horizontalArm.setPower(-1.0);
 
-        drivetrain(1.7, 0,0);
+        drivetrain(1.4, 0,0);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -40,20 +43,9 @@ public class Parking2 extends LinearOpMode {
 
         resetStartTime();
 
-
         //-------------------------------------------------------------
-        drivetrain(0,0,-0.18);
-        setAllPower(1.0);
 
-        while (opModeIsActive() && isRobotBusy()) {
-            //checkMotors();
-            idle();
-        }
-        setAllPower(0);
-
-
-        //--------------------------------------------------------------
-        drivetrain(0.5, 0,0);
+        drivetrain(0, 0,-0.039);
         setAllPower(1.0);
 
         while (opModeIsActive() && isRobotBusy()) {
@@ -62,57 +54,45 @@ public class Parking2 extends LinearOpMode {
         }
         setAllPower(0.0);
 
+        resetStartTime();
 
         //-------------------------------------------------------------
-        drivetrain(-1.1, 0,0);
-        setAllPower(1.0);
 
-        while (opModeIsActive() && isRobotBusy()) {
-            //checkMotors();
-            idle();
-        }
-        setAllPower(0.0);
-
-        //-------------------------------------------------------------
-        drivetrain(0, 0,0.04);
-        setAllPower(1.0);
-
-        while (opModeIsActive() && isRobotBusy()) {
-            //checkMotors();
-            idle();
-        }
-        setAllPower(0.0);
-
-
-        //-------------------------------------------------------------
-        drivetrain(0, 0,0);
-        setAllPower(1.0);
-
-        while (opModeIsActive() && isRobotBusy()) {
-            //checkMotors();
-            idle();
-        }
-        setAllPower(0.0);
 
 
         runtime.reset();
 
         while (opModeIsActive()){
             double time = runtime.seconds();
-            if (time > 0 && time < 8){
-                shooterMotor.setVelocity(1190);
+            if (time > 0 && time < 9){
+                shooterMotorEx.setVelocity(1350);
+                telemetry.addData("shootervel", shooterMotorEx.getVelocity());
+                telemetry.update();
+
             }
-            if (time > 10 && time < 15){
+            if (time > 9 && time < 9.75){
                 magazineMotor.setPower(1.0);
                 intakeMotor.setPower(-1.0);
             }
-            if (time > 15 && time < 16){
+            if (time > 9.75 && time < 10.5){
+                magazineMotor.setPower(0.0);
+            }
+            if (time > 10.5 && time < 11.25){
+                magazineMotor.setPower(1.0);
+            }
+            if (time > 11.25 && time < 12){
+                magazineMotor.setPower(0.0);
+            }
+            if (time > 12 && time < 13){
+                magazineMotor.setPower(1.0);
+            }
+            if (time > 13 && time < 14){
                 intakeMotor.setPower(0.0);
                 magazineMotor.setPower(0.0);
-                shooterMotor.setVelocity(0.0);
+                shooterMotor.setVelocity(0);
             }
-            if (time > 16){
-                drivetrain(0.6, 0,0);
+            if (time > 14 && time < 15.2){
+                drivetrain(0, 0,0.6);
                 setAllPower(1.0);
 
                 while (opModeIsActive() && isRobotBusy()) {
@@ -120,8 +100,49 @@ public class Parking2 extends LinearOpMode {
                     idle();
                 }
                 setAllPower(0.0);
+            }
+
+            if (time > 15.2 && time < 16.2){
+                drivetrain(-0.5, 0,0);
+                setAllPower(1.0);
+
+                while (opModeIsActive() && isRobotBusy()) {
+                    //checkMotors();
+                    idle();
+                }
+                setAllPower(0.0);
+            }
+
+            if (time > 16.2 && time < 17.75){
+                verticalArm.setPower(-0.35);
+            }
+            if (time > 17.75 && time < 18.5){
+                verticalArm.setPower(0);
+                horizontalArm.setPower(1.0);
+            }
+            if (time > 18.5 && time < 19.5){
+                drivetrain(0, 0,0.3);
+                setAllPower(1.0);
+
+                while (opModeIsActive() && isRobotBusy()) {
+                    //checkMotors();
+                    idle();
+                }
+                setAllPower(0.0);
+            }
+            if (time > 19.5 && time < 20.5){
+                drivetrain(.5, 0,0);
+                setAllPower(1.0);
+
+                while (opModeIsActive() && isRobotBusy()) {
+                    //checkMotors();
+                    idle();
+                }
+                setAllPower(0.0);
+
                 break;
             }
+
         }
 
 
@@ -146,6 +167,13 @@ public class Parking2 extends LinearOpMode {
         intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         magazineMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         shooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        horizontalArm = hardwareMap.get(CRServo.class, "hArm");
+        verticalArm = hardwareMap.get(DcMotor.class, "vArm");
+        verticalArm.setDirection(DcMotorSimple.Direction.REVERSE);
+        verticalArm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        shooterMotorEx = (DcMotorEx) shooterMotor;
 
 
     }
@@ -185,6 +213,13 @@ public class Parking2 extends LinearOpMode {
         return blMotor.isBusy();
     }
 
+    /**
+     * Increment a value by delta and return the new value.
+     *
+     * @param  forwardDistance   the distance, in meters, the robot should move forward
+     * @param  strafeDistance    the distance, in meters, the robot should strafe sideways
+     * @param  rotationDistance  the angle to rotate the robot
+     */
     private void drivetrain(double forwardDistance, double strafeDistance, double rotationDistance) {
 
         setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -202,20 +237,5 @@ public class Parking2 extends LinearOpMode {
         brMotor.setPower(forward + strafe - rotation);
         blMotor.setPower(forward - strafe + rotation);
     }
-    /*private void setLeftPower(double power, ) {
-        frMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
-        flMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
-        brMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
-        blMotor.setTargetPosition((int) Math.round(-Constants.TICKS_PER_METER * 1.72));
-        frMotor.setPower(-power);
-        flMotor.setPower(power);
-        brMotor.setPower();
-        blMotor.setPower(power);
-    }
-    private void setRightPower(double power) {
-        frMotor.setPower(power);
-        flMotor.setPower(0);
-        brMotor.setPower(power);
-        blMotor.setPower(0);
-    }*/
+
 }
